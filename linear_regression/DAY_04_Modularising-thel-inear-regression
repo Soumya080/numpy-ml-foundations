@@ -1,0 +1,125 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyOohIpJA9RogyTl9bnWqzDY",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/Soumya080/numpy-ml-foundations/blob/main/linear_regression/DAY_04_Modularising-thel-inear-regression\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import numpy as np\n",
+        "\n",
+        "# Global parameters\n",
+        "num_iterations = 1000\n",
+        "learning_rate = 0.01\n",
+        "\n",
+        "# 1. Define x_data and y_data once as fixed input for training\n",
+        "x_data = np.random.randn(100, 1)\n",
+        "y_data = 2.5 * x_data + np.random.randn(100, 1)\n",
+        "\n",
+        "# Function to initialize weights and bias\n",
+        "def initialize_parameters():\n",
+        "  w = np.random.randn(1, 1)\n",
+        "  b = np.random.randn(1, 1)\n",
+        "  return w, b\n",
+        "\n",
+        "# Function to compute loss\n",
+        "def compute_loss(x, y, w, b):\n",
+        "  m = x.shape[0]\n",
+        "  y_pred = x @ w + b\n",
+        "  loss = np.mean((y_pred - y)**2)\n",
+        "  return loss\n",
+        "\n",
+        "# Function to compute gradient\n",
+        "def compute_gradient(x, y, w, b):\n",
+        "  m = x.shape[0]\n",
+        "  y_pred = x @ w + b\n",
+        "\n",
+        "  grad_w = np.mean(2 * x * (y_pred - y))\n",
+        "  grad_b = np.mean(2 * (y_pred - y))\n",
+        "\n",
+        "  return grad_w, grad_b\n",
+        "\n",
+        "# Function to update parameters\n",
+        "def update_parameters(w, b, grad_w, grad_b, learning_rate):\n",
+        "  # learning_rate is passed as argument, no need to re-define here\n",
+        "  w = w - learning_rate * grad_w\n",
+        "  b = b - learning_rate * grad_b\n",
+        "  return w, b\n",
+        "\n",
+        "# Training function\n",
+        "def train(x, y, w_init, b_init, learning_rate, num_iterations):\n",
+        "  w, b = w_init, b_init # Start with initial weights and bias\n",
+        "  losses = [] # To store loss at each iteration\n",
+        "  for i in range(num_iterations):\n",
+        "    loss_val = compute_loss(x, y, w, b)\n",
+        "    grad_w, grad_b = compute_gradient(x, y, w, b)\n",
+        "    w, b = update_parameters(w, b, grad_w, grad_b, learning_rate)\n",
+        "    losses.append(loss_val)\n",
+        "  return w, b, losses # Return updated parameters and all recorded losses\n",
+        "\n",
+        "# Main execution block to run training and output results\n",
+        "# Initialize weights and bias once before training\n",
+        "initial_w, initial_b = initialize_parameters()\n",
+        "\n",
+        "# Run training\n",
+        "final_w, final_b, all_losses = train(x_data, y_data, initial_w, initial_b, learning_rate, num_iterations)\n",
+        "\n",
+        "# Output results\n",
+        "print(f\"Final Weights (w): {final_w}\")\n",
+        "print(f\"Final Bias (b): {final_b}\")\n",
+        "print(f\"Mean of all recorded losses during training: {np.mean(all_losses)}\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "5tBQzR6W1liY",
+        "outputId": "ce55c41e-098b-4af9-93fb-c8586ceca97c"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Final Weights (w): [[2.58700669]]\n",
+            "Final Bias (b): [[0.13462799]]\n",
+            "Mean of all recorded losses during training: 1.3999393373662141\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "e63VvIAYHJlj"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
